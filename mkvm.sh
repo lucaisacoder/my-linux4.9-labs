@@ -16,13 +16,12 @@ mv a9rootfs.ext3 vm/a9rootfs.ext3
 
 cp linux-4.9/arch/arm/boot/dts/vexpress-v2p-ca9.dtb vm/ 
 cp linux-4.9/arch/arm/boot/zImage vm/
-cp linux-4.9/vmlinux.o vm/
+#cp linux-4.9/vmlinux.o vm/
 #cp linux-4.9/vmlinux vm/
 
 cd ./vm
 # generate boot.sh mkrootfs.sh 
 cat > boot.sh << EOF
-pwd
 ./mkrootfs.sh 
 qemu-system-arm -M vexpress-a9 -m 512M -kernel ./zImage -dtb ./vexpress-v2p-ca9.dtb -nographic -append "root=/dev/mmcblk0  console=ttyAMA0" -sd a9rootfs.ext3 -S -s
 #qemu-system-arm -M vexpress-a9 -m 512M -kernel ./zImage -dtb ./vexpress-v2p-ca9.dtb -nographic -append "root=/dev/mmcblk0  console=ttyAMA0" -sd a9rootfs.ext3 -s
