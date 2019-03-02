@@ -15,15 +15,20 @@ mkfs.ext3 a9rootfs.ext3
 mv a9rootfs.ext3 vm/a9rootfs.ext3 
 
 cp linux-4.9/arch/arm/boot/dts/vexpress-v2p-ca9.dtb vm/ 
-cp linux-4.9/arch/arm/boot/zImage vm/ 
+cp linux-4.9/arch/arm/boot/zImage vm/
+cp linux-4.9/vmlinux.o vm/
+#cp linux-4.9/vmlinux vm/
 
+cd ./vm
 # generate boot.sh mkrootfs.sh 
-cat > vm/boot.sh << EOF
-mkrootfs.sh 
-qemu-system-arm -M vexpress-a9 -m 512M -kernel ./zImage -dtb ./vexpress-v2p-ca9.dtb -nographic -append "root=/dev/mmcblk0  console=ttyAMA0" -sd a9rootfs.ext3 
+cat > boot.sh << EOF
+pwd
+./mkrootfs.sh 
+qemu-system-arm -M vexpress-a9 -m 512M -kernel ./zImage -dtb ./vexpress-v2p-ca9.dtb -nographic -append "root=/dev/mmcblk0  console=ttyAMA0" -sd a9rootfs.ext3 -S -s
+#qemu-system-arm -M vexpress-a9 -m 512M -kernel ./zImage -dtb ./vexpress-v2p-ca9.dtb -nographic -append "root=/dev/mmcblk0  console=ttyAMA0" -sd a9rootfs.ext3 -s
 EOF
 
-cat > vm/mkrootfs.sh << EOF 
+cat > mkrootfs.sh << EOF 
 sudo mknod ./rootfs/dev/tty1 c 4 1 
 sudo mknod ./rootfs/dev/tty2 c 4 2 
 sudo mknod ./rootfs/dev/tty3 c 4 3 
@@ -34,7 +39,7 @@ sudo mount -t ext3 a9rootfs.ext3 tmpfs/ -o loop
 sudo cp rootfs/* tmpfs/ -r 
 sudo umount tmpfs/ 
 EOF
-
+cd ..
 # tar 
-tar cjf vm.tar.bz2 vm/
-
+#tar cjf vm.tar.bz2 vm/
+#rm -rf ./vm
